@@ -21,33 +21,28 @@ import {
   TextInput,
   ActivityIndicator
 } from 'react-native';
-
+import {fetchData} from './src/res/utils'
 
 
 const App: () => React$Node = () => {
   const [data, setData] = useState({isLoading: false, list: [], page: 1});
   const [selected, setSelected] = useState(new Map());
-  const [page, setPage] = useState(1);
-
 
 
   useEffect(() => {
-    fetchData(true)
+    loadData(true)
   },[]);
   // если написать [page] будет вызываться при маунте и каждый раз, когда page будет меняться. отлчие от use callback - он вызовет определенную функцию, только если поменяется значение(для оптимизации что б не создавались ссылки при каждом рендере)
 
-  const fetchData = async (loader: boolean) => {
+  const loadData = async (loader: boolean) => {
     setData({...data, isLoading: loader});
     const baseUrl = 'https://rickandmortyapi.com/api/';
-    console.log(`${baseUrl}/character/?page=${page}`, 'HTTP call');
-    const response = await fetch(`${baseUrl}/character/?page=${data.page}`);
-    if (response.ok) {
-      const json = await response.json();
-      console.log(json);
-      console.log(data.page, 'page')
+    try {
+      const json = await fetchData(`${baseUrl}/character/?page=${data.page}`);
+      console.log(data, 'data');
       setData({...data, isLoading: false, list: [...data.list, ...json.results], page: data.page+1});
-    } else {
-      console.log('Error' + response.status);
+    } catch(err) {
+      console.log('Error! ' + err);
       setData({...data, isLoading: false});
     }
   };
@@ -55,7 +50,7 @@ const App: () => React$Node = () => {
   //для оптимизации(что б перерендер компонента не создавал функцию, когда ничего не поменялось), возвращает одну и туже функцию, до тех пор, пока аргументы не изменились, useCallback используется, когда важна постоянность ссылок на функцию
   const onSelect = useCallback(
       (id) => {
-        // через new, потому что в обратном случае, после мутации ссылка все равно будет та же и рендера не произойдет
+        // через конструктор, потому что в обратном случае, после мутации ссылка все равно будет та же и рендера не произойдет
         const newSelected = new Map(selected);
         newSelected.set(id, !selected.get(id));
         setSelected(newSelected);
@@ -87,7 +82,7 @@ const App: () => React$Node = () => {
   const renderHeader = () => {
     return (
         <View style={styles.header}>
-          <TextInput style={styles.input} placeholder={'Find it'} placeholderTextColor={''}/>
+          <TextInput style={styles.input} placeholder={'Find it'} placeholderTextColor={'#333333'}/>
           <Image style={styles.icon} source={require('./src/res/img/search.png')}/>
         </View>
     )
@@ -100,7 +95,7 @@ const App: () => React$Node = () => {
             data={data.list}
             renderItem={({item}) => renderItem(item)}
             keyExtractor={item => String(item.id)}
-            onEndReached={() => fetchData()}
+            onEndReached={() => loadData()}
             onEndReachedThreshol={50}
             extraData={data.length}
             ListHeaderComponent={renderHeader}
@@ -167,7 +162,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     flexDirection: 'row'
-    // position: 'absolute'
   },
   input: {
     height: 30,
