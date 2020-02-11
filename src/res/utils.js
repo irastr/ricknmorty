@@ -1,8 +1,19 @@
+/**
+ * @format
+ * @flow
+ */
+
+import React, {useState, useEffect } from 'react';
+import Logger from './Logger'
+
+type Character = {}
+
 export const fetchData = (url) => {
     return new Promise(async (resolve, reject) => {
         try {
             const response = await fetch(url);
             if (response.ok) {
+                Logger.incoming(`${response.status}`, url);
                 const data = await response.json();
                 resolve(data)
             } else {
@@ -13,6 +24,31 @@ export const fetchData = (url) => {
         }
     });
 };
+
+/**
+ * Custom hook for api calls. Accepts page ang options
+ */
+
+export const useFetch = (page: number): [Character[], boolean] => {
+    const [data, setData] = useState<Character[]>([]);
+    const [loading, setLoading] = useState(true);
+    const baseUrl = 'https://rickandmortyapi.com/api/';
+    useEffect(() => {
+        const makeApiCall = async () => {
+            try {
+                const json = await fetchData(`${baseUrl}/character/?page=${page}`);
+                setData([...data, ...json.results]);
+                setLoading(false);
+            } catch(err) {
+                setLoading(false);
+                console.log('Error! ' + err);
+            }
+        };
+        makeApiCall()
+    }, [page]);
+    return [data, loading];
+};
+
 
 // export const fetchData = (url) => {
 //     return new Promise((resolve, reject) => {
