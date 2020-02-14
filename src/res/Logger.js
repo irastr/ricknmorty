@@ -17,4 +17,6 @@ const coloredPrefix = (prefix, type) => (text, data) => console.log(`%c${prefix}
 
 export default class {
     static incoming = coloredPrefix('[ <- ]', 'incoming');
+    static outgoing = coloredPrefix('[ -> ]', 'incoming');
+
 }

@@ -3,8 +3,10 @@
  * @flow
  */
 
-import React, {useState, useEffect } from 'react';
+import React, {useEffect, useState} from 'react';
 import Logger from './Logger'
+import queryString from "query-string";
+
 
 type Character = {}
 
@@ -12,8 +14,9 @@ export const fetchData = (url) => {
     return new Promise(async (resolve, reject) => {
         try {
             const response = await fetch(url);
+            Logger.outgoing(url); //fix
             if (response.ok) {
-                Logger.incoming(`${response.status}`, url);
+                Logger.outgoing(`${response.status}`, url);
                 const data = await response.json();
                 resolve(data)
             } else {
@@ -26,18 +29,19 @@ export const fetchData = (url) => {
 };
 
 /**
- * Custom hook for api calls. Accepts page ang options
+ * Custom hook for api calls. Accepts url and limit
  */
 
-export const useFetch = (page: number): [Character[], boolean] => {
+export const useFetch = (url: number, options): [Character[], boolean] => {
+    const baseUrl = 'https://rickandmortyapi.com/api/';
     const [data, setData] = useState<Character[]>([]);
     const [loading, setLoading] = useState(true);
-    const baseUrl = 'https://rickandmortyapi.com/api/';
     useEffect(() => {
         const makeApiCall = async () => {
             try {
-                const json = await fetchData(`${baseUrl}/character/?page=${page}`);
-                setData([...data, ...json.results]);
+                const json = await fetchData(`${baseUrl}/${url}?${queryString.stringify(options)}`);
+                setData(Array.isArray(json.results) ? [...data, ...json.results] : setData(json));
+                // setData(Array.isArray(json.results) ? [ ...json.results] : setData(json));
                 setLoading(false);
             } catch(err) {
                 setLoading(false);
@@ -45,7 +49,7 @@ export const useFetch = (page: number): [Character[], boolean] => {
             }
         };
         makeApiCall()
-    }, [page]);
+    }, [url, options]);
     return [data, loading];
 };
 
