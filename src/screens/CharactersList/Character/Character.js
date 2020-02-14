@@ -9,12 +9,14 @@ import {styles} from "./styles";
 import animation from './animation';
 import Button from '../Button'
 
-const Character: ()  => React$Node = ({item, isSelected, navigation, onSelect}) => {
+const Character: ()  => React$Node = ({item, isSelected, navigation, onSelect, value}) => {
     const [animated] = useState(new Animated.Value(0));
 
     useEffect(()=> {
         animation.onPressAnimation(animated, isSelected ? 1 : 0);
     }, [isSelected]);
+
+    console.log(value, 'value');
 
     return (
         <>
@@ -48,5 +50,5 @@ const Character: ()  => React$Node = ({item, isSelected, navigation, onSelect}) 
 //     return prevProps.isSelected === nextProps.isSelected
 // };
 
-export default React.memo(Character);
-// export default Character;
+// export default React.memo(Character);
+export default Character;

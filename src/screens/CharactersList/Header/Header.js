@@ -3,7 +3,7 @@
  * @flow
  **/
 
-import React from 'react';
+import React, {useEffect} from 'react';
 import {Image, TextInput, View} from "react-native";
 import {styles} from "./styles";
 
@@ -11,7 +11,7 @@ const Header = ({value, onTextChange, setOptions, options}) => {
 
     const handleTextChange = (text) => {
         onTextChange(text);
-        setOptions({name: value.toLowerCase()})
+        // useEffect(()=> setOptions({name: value.toLowerCase(), page: 1}), [text])
     };
 
     return (

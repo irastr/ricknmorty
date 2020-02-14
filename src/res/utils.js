@@ -40,10 +40,10 @@ export const useFetch = (url: number, options): [Character[], boolean] => {
         const makeApiCall = async () => {
             try {
                 const json = await fetchData(`${baseUrl}/${url}?${queryString.stringify(options)}`);
-                setData(Array.isArray(json.results) ? [...data, ...json.results] : setData(json));
-                // setData(Array.isArray(json.results) ? [ ...json.results] : setData(json));
+                setData(options.page > 1 ? [...data, ...json.results] : json.results );
                 setLoading(false);
             } catch(err) {
+                options.page === 1 && setData([]);
                 setLoading(false);
                 console.log('Error! ' + err);
             }

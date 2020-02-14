@@ -3,7 +3,7 @@
  * @flow
  */
 
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import Header from './Header';
 import Character from './Character';
 
@@ -29,7 +29,14 @@ const CharactersList: () => React$Node = ({navigation}) =>  {
         }, []
     );
 
+    useEffect(()=> setOptions({name: value.toLowerCase(), page: 1}), [value]);
 
+
+    console.log(characters, 'CHARS');
+
+    const getOptions = () => {
+        options.name ? setOptions({...options, page: options.page + 1}) : setOptions({page: options.page + 1})
+    };
     // return useMemo(() => {
         return (
             <>
@@ -37,12 +44,12 @@ const CharactersList: () => React$Node = ({navigation}) =>  {
                     <FlatList
                         data={characters}
                         renderItem={({item}) => <Character item={item} isSelected={selected.get(item.id)}
-                                                           onSelect={onSelect} navigation={navigation}/>}
+                                                           onSelect={onSelect} navigation={navigation} value={value}/>}
                         keyExtractor={item => String(item.id)}
-                        onEndReached={() => setOptions({...options, page: options.page + 1})}
+                        onEndReached={() => getOptions()}
                         onEndReachedThreshol={50}
                         ListHeaderComponent={<Header value={value} onTextChange={onTextChange} setOptions={setOptions} options={options}/>}
-                        extraData={value}
+                        extraData={value || characters.length}
                     /> }
             </>
         )
