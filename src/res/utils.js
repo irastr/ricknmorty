@@ -6,6 +6,7 @@
 import React, {useEffect, useState} from 'react';
 import Logger from './Logger'
 import queryString from "query-string";
+import {LayoutAnimation} from "react-native";
 
 
 type Character = {}
@@ -14,7 +15,7 @@ export const fetchData = (url) => {
     return new Promise(async (resolve, reject) => {
         try {
             const response = await fetch(url);
-            Logger.outgoing(url); //fix
+            // Logger.outgoing(url); //fix
             if (response.ok) {
                 Logger.outgoing(`${response.status}`, url);
                 const data = await response.json();
@@ -28,11 +29,13 @@ export const fetchData = (url) => {
     });
 };
 
+//ad options for post in fetchData
+
 /**
  * Custom hook for api calls. Accepts url and limit
  */
 
-export const useFetch = (url: number, options): [Character[], boolean] => {
+export const useFilter = (url: number, options, filters): [Character[], boolean] => {
     const baseUrl = 'https://rickandmortyapi.com/api/';
     const [data, setData] = useState<Character[]>([]);
     const [loading, setLoading] = useState(true);
@@ -40,7 +43,8 @@ export const useFetch = (url: number, options): [Character[], boolean] => {
         const makeApiCall = async () => {
             try {
                 const json = await fetchData(`${baseUrl}/${url}?${queryString.stringify(options)}`);
-                setData(options.page > 1 ? [...data, ...json.results] : json.results );
+                // LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+                setData(options.page > 1 ? [...data, ...json.results] : (json.results));
                 setLoading(false);
             } catch(err) {
                 options.page === 1 && setData([]);
@@ -49,7 +53,7 @@ export const useFetch = (url: number, options): [Character[], boolean] => {
             }
         };
         makeApiCall()
-    }, [url, options]);
+    }, [url, options, filters]);
     return [data, loading];
 };
 

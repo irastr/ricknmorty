@@ -1,7 +1,8 @@
 import React from 'react';
 import CharactersList from './screens/CharactersList';
-import Locations from './screens/Locations';
-import Episodes from './screens/Episodes';
+import Episode from './screens/Episode';
+import Details from './screens/Details';
+import Login from './screens/Login'
 
 
 import { NavigationContainer } from '@react-navigation/native';
@@ -12,10 +13,11 @@ const Stack = createStackNavigator();
 function App() {
     return (
         <NavigationContainer>
-            <Stack.Navigator initialRouteName="Characters">
+            <Stack.Navigator initialRouteName="Login">
+                <Stack.Screen name="Login" component={Login} />
                 <Stack.Screen name="Characters" component={CharactersList} />
-                <Stack.Screen name="Locations" component={Locations} />
-                <Stack.Screen name="Episodes" component={Episodes} />
+                <Stack.Screen name="Episode" component={Episode} />
+                <Stack.Screen name="Details" component={Details} />
             </Stack.Navigator>
         </NavigationContainer>
     );

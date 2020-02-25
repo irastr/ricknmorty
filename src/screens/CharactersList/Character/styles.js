@@ -4,6 +4,7 @@ export const styles = StyleSheet.create({
     itemWrap: {
         borderColor: 'transparent',
         borderWidth: 2,
+        borderRadius: 12,
         marginVertical: 5,
         marginHorizontal: 5,
         flexDirection: 'row',
@@ -25,21 +26,21 @@ export const styles = StyleSheet.create({
         marginRight: 10
     },
     title: {
-        color: '#ed8240',
+        color: '#242425',
         fontWeight: '700',
-        fontSize: 15,
+        fontSize: 20,
         marginBottom: 5
     },
     textWrap: {
         flex: 1
     },
     subTitle: {
-        color: '#333333',
+        color: '#D0D0D0',
         fontWeight: '500',
-        fontSize: 12
+        fontSize: 16
     },
     active: {
-        borderColor: `rgba(237, 130, 64, 1)`
+        borderColor: '#7fcd91'
     },
     buttonWrap: {
         flexDirection: 'row',
