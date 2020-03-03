@@ -42,5 +42,16 @@ export const styles = StyleSheet.create({
     },
     itemSubText: {
         color: colors.grey
+    },
+    header: {
+        fontWeight: '600'
+    },
+    headerText: {
+        fontWeight: '600',
+        marginBottom: 5
+    },
+    headerSubText: {
+        color: colors.grey,
+        fontWeight: '500'
     }
 });

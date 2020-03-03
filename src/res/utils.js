@@ -47,6 +47,7 @@ export const useFilter = (url: number, options, filters): [Character[], boolean]
                 setData(options.page > 1 ? [...data, ...json.results] : (json.results));
                 setLoading(false);
             } catch(err) {
+                // Set empty array if nothing found and it's not pull to refresh
                 options.page === 1 && setData([]);
                 setLoading(false);
                 console.log('Error! ' + err);

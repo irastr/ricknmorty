@@ -6,6 +6,8 @@
 import React, {useState} from 'react';
 import {Animated, Image, Text, TouchableOpacity, View} from "react-native";
 import {styles} from "./styles";
+// import {Character as CharacterType } from '../../../res/models'
+
 
 
 const Character: ()  => React$Node = ({item, isSelected, navigation, onSelect, value, isScrolling}) => {
@@ -36,8 +38,6 @@ const Character: ()  => React$Node = ({item, isSelected, navigation, onSelect, v
             callback();
         });
     };
-
-    // console.log(isScrolling, 'isScrolling');
 
     return (
         <>

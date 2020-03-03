@@ -12,13 +12,12 @@ import {ActivityIndicator, FlatList, TouchableOpacity, UIManager, LayoutAnimatio
 import {useFilter} from '../../res/utils'
 import styles from './styles'
 import colors from '../../res/colors'
+import {Character as CharacterType} from '../../res/models'
 
 if (Platform.OS === 'android' &&
     UIManager.setLayoutAnimationEnabledExperimental) {
     UIManager.setLayoutAnimationEnabledExperimental(true);
 }
-
-const baseUrl = 'https://rickandmortyapi.com/api/';
 
 const CharactersList: () => React$Node = ({navigation}) =>  {
     const [options, setOptions] = useState({page: 1, status: '', gender: '', name: ''});
@@ -26,7 +25,7 @@ const CharactersList: () => React$Node = ({navigation}) =>  {
     const [value, onTextChange] = useState('');
     const isInitialMount = useRef(true);
     const scrollViewRef = useRef<ScrollView>();
-    const [characters, loading] = useFilter('character/', options);
+    const [characters, loading] = useFilter<CharacterType[]>('character/', options);
     const [floatingButton, setFloatButton] =  useState(false);
     // const [isScrolling, setScrolling] = useState(false);
 

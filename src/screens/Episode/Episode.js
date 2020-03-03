@@ -9,6 +9,7 @@ import {styles} from "./styles";
 import {Character, Episode} from '../../res/models'
 import {fetchData} from "../../res/utils";
 import colors from "../../res/colors";
+import Expandable from './Expandable'
 
 // type ISO8601 = string
 // type DateString = string
@@ -63,12 +64,22 @@ const EpisodeDetail = ({route}) => {
             <Text style={styles.episodeSubTitle}>{item.episode}</Text>
             <Text style={styles.episodeDate}>{item.air_date}</Text>
             <FlatList
-                      data={characters}
-                      renderItem={({item}) => renderItem(item)}
-                      key={item => String(item.id)}
-                      horizontal={true}
-                      ListEmptyComponent={loading &&  <ActivityIndicator size="large" color={colors.black}/>}
+                data={characters}
+                renderItem={({item}) => renderItem(item)}
+                key={item => String(item.id)}
+                horizontal={true}
+                ListEmptyComponent={loading && <ActivityIndicator size="large" color={colors.black}/>}
             />
+            <Expandable>
+                <Expandable.Header>
+                    <Text style={styles.headerText}>Header</Text>
+                    <Text style={styles.headerSubText}>Lorem ipsum dolor sit amet</Text>
+                    <Expandable.Icon />
+                </Expandable.Header>
+                <Expandable.Body>
+                    <Text>Lorem ipsum dollor sit amet</Text>
+                </Expandable.Body>
+            </Expandable>
         </ScrollView>
         </>
     )
