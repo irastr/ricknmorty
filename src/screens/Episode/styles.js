@@ -48,10 +48,15 @@ export const styles = StyleSheet.create({
     },
     headerText: {
         fontWeight: '600',
-        marginBottom: 5
+        marginBottom: 5,
+        fontSize: 15
     },
     headerSubText: {
         color: colors.grey,
-        fontWeight: '500'
+        fontWeight: '500',
+        fontSize: 15
+    },
+    bodyText: {
+        fontSize: 15
     }
 });

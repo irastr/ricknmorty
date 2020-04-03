@@ -77,7 +77,7 @@ const EpisodeDetail = ({route}) => {
                     <Expandable.Icon />
                 </Expandable.Header>
                 <Expandable.Body>
-                    <Text>Lorem ipsum dollor sit amet</Text>
+                    <Text style={styles.bodyText}>Lorem ipsum dollor sit amet</Text>
                 </Expandable.Body>
             </Expandable>
         </ScrollView>

@@ -3,7 +3,7 @@ import {TouchableOpacity} from 'react-native'
 import { ExpandableContext } from '../Expandable'
 import {styles} from './styles'
 
-const Header = ({  }) => {
+const Header = ({ children }) => {
     const { toggle, expanded } = useContext(ExpandableContext);
 
     return (

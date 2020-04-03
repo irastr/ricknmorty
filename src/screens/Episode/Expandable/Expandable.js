@@ -14,7 +14,7 @@ export const ExpandableContext = createContext();
 //We can pass defaultValue argument in createContext() and it is only used when a component does not have a matching Provider above it in the tree.
 const { Provider } = ExpandableContext;
 
-
+//Compound component
 const Expandable: ()  => React$Node = ({onExpand, children}) => {
     const [expanded, setExpanded] = useState(false);
     const componentJustMounted = useRef(true);
