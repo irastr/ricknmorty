@@ -6,11 +6,11 @@ import {FontAwesomeIcon} from "@fortawesome/react-native-fontawesome";
 import {faChevronUp} from "@fortawesome/free-solid-svg-icons";
 import {faChevronDown} from "@fortawesome/free-solid-svg-icons";
 
-const Icon = ({  }) => {
+const Icon = ({...otherProps}) => {
     const { expanded } = useContext(ExpandableContext);
 
     return (
-        <View style={styles.icon}>
+        <View style={styles.icon} {...otherProps}>
             <FontAwesomeIcon icon={expanded ? faChevronUp : faChevronDown} style={styles.upIcon} size={15}/>
         </View>
     )

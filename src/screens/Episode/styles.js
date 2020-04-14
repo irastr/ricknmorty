@@ -58,5 +58,11 @@ export const styles = StyleSheet.create({
     },
     bodyText: {
         fontSize: 15
+    },
+    expandable: {
+        marginBottom: 20
+    },
+    accordion: {
+        marginBottom: 5
     }
 });

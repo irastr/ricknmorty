@@ -3,11 +3,12 @@
  * @flow
  **/
 
-import React, {createContext, useCallback, useEffect, useMemo, useRef, useState} from 'react'
-import {LayoutAnimation, View} from 'react-native'
+import React, {createContext,  useEffect, useMemo, useRef} from 'react'
+import { View} from 'react-native'
 import Header from './Header'
 import Icon from './Icon'
 import Body from './Body'
+import useExpanded from '../../../res/hooks/useExpanded'
 
 
 export const ExpandableContext = createContext();
@@ -15,38 +16,41 @@ export const ExpandableContext = createContext();
 const { Provider } = ExpandableContext;
 
 //Compound component
-const Expandable: ()  => React$Node = ({onExpand, children}) => {
-    const [expanded, setExpanded] = useState(false);
+const Expandable: ()  => React$Node = ({onExpand, children, shouldExpand, ...otherProps}) => {
+    const isExpandControlled = shouldExpand !== undefined;
+    const {expanded, toggle} = useExpanded(false);
     const componentJustMounted = useRef(true);
+
 
     useEffect(
         () => {
-            if (!componentJustMounted) {
+            // run only when component is controlled.
+            if (!componentJustMounted && !isExpandControlled) {
                 //Do something after expand in parent component and receive state of expanded
                 onExpand(expanded);
                 componentJustMounted.current = false
             }
         },
-        [expanded]
+        [expanded, onExpand, isExpandControlled]
     );
 
 
-    const toggle = useCallback(
-        //Function is created only on first mount, all another renders do not recreate function reference
-        () => {
-            LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-            setExpanded(prevExpanded => !prevExpanded)
-        },
-        []
-    );
+    const getState = isExpandControlled ? shouldExpand : expanded;
+    const getToggle = isExpandControlled ? onExpand : toggle;
+
 
     //With use memo to create new reference only if expanded or toggle has changed
-    const value = useMemo(() => ({ expanded, toggle }), [expanded, toggle]);
+    // const value = useMemo(() => ({ expanded, toggle }), [expanded, toggle]);
+    // { expanded: getState, toggle: getToggle } - ключу expanded даем значение getState. вместо expanded до этого
+    const value = useMemo(() => ({ expanded: getState, toggle: getToggle }), [
+        getState,
+        getToggle
+    ]);
 
 
     return (
         <Provider value={value}>
-            <View>
+            <View {...otherProps}>
                 {children}
             </View>
         </Provider>

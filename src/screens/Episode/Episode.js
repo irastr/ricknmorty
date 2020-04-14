@@ -11,25 +11,30 @@ import {fetchData} from "../../res/utils";
 import colors from "../../res/colors";
 import Expandable from './Expandable'
 
-// type ISO8601 = string
-// type DateString = string
-//
-// type Episode = {
-//     id: number,
-//     name: string,
-//     air_date: DateString,
-//     episode: string,
-//     characters: String[],
-//     url: string,
-//     created: ISO8601
-// }
-
+const information = [
+    {
+        header: 'Why everyone should live forever',
+        note: 'This is highly sensitive information ... !!!!'
+    },
+    {
+        header: 'The internet disappears',
+        note:
+            'I just uncovered the biggest threat...'
+    },
+    {
+        header: 'The truth about Elon musk and Mars!',
+        note: 'Nobody tells you this...'
+    }
+];
 
 const EpisodeDetail = ({route}) => {
     const {item}: Episode = route.params;
     const [characters, setCharacters] = useState<Character[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
-    console.log(item.characters);
+    const [activeIndex, setActiveIndex] = useState(null);
+    // const onExpand = evt => setActiveIndex(evt.target.dataset.index);
+    const onExpand = index => setActiveIndex(index);
+
 
     useEffect(()=> {
         const makeApiCall = async () => {
@@ -45,7 +50,6 @@ const EpisodeDetail = ({route}) => {
         makeApiCall()
     }, []);
 
-    console.log(characters, 'chars');
 
     const renderItem = (item: Character) => {
         return (
@@ -56,6 +60,40 @@ const EpisodeDetail = ({route}) => {
             </View>
         )
     };
+
+    const renderExpandable = () => (
+        <Expandable style={styles.expandable}>
+            <Expandable.Header>
+                <Text style={styles.headerText}>Header</Text>
+                <Text style={styles.headerSubText}>Lorem ipsum dolor sit amet</Text>
+                <Expandable.Icon/>
+            </Expandable.Header>
+            <Expandable.Body>
+                <Text style={styles.bodyText}>Lorem ipsum dollor sit amet</Text>
+            </Expandable.Body>
+        </Expandable>
+    );
+
+    const renderAccordion = () => (
+        information.map(({header, note}, index)=> (
+                <Expandable
+                    shouldExpand={index === +activeIndex}
+                    onExpand={() => onExpand(index)}
+                    key={index}
+                    style={styles.accordion}
+                >
+                    <Expandable.Header data-index={index}>
+                        <Text style={styles.headerText}>{header}</Text>
+                        <Text style={styles.headerSubText}>Some additional info</Text>
+                        <Expandable.Icon />
+                    </Expandable.Header>
+                    <Expandable.Body>
+                        <Text style={styles.bodyText}>{note}</Text>
+                    </Expandable.Body>
+                </Expandable>
+            ))
+    );
+
 
     return (
         <>
@@ -70,16 +108,8 @@ const EpisodeDetail = ({route}) => {
                 horizontal={true}
                 ListEmptyComponent={loading && <ActivityIndicator size="large" color={colors.black}/>}
             />
-            <Expandable>
-                <Expandable.Header>
-                    <Text style={styles.headerText}>Header</Text>
-                    <Text style={styles.headerSubText}>Lorem ipsum dolor sit amet</Text>
-                    <Expandable.Icon />
-                </Expandable.Header>
-                <Expandable.Body>
-                    <Text style={styles.bodyText}>Lorem ipsum dollor sit amet</Text>
-                </Expandable.Body>
-            </Expandable>
+            {renderExpandable()}
+            {renderAccordion()}
         </ScrollView>
         </>
     )

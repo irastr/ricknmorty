@@ -5,8 +5,6 @@
 // import { Animated } from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
 import {Animated, TextInput, TouchableOpacity, View} from "react-native";
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {faBars} from '@fortawesome/free-solid-svg-icons'
 
 import {styles} from "./styles";
 import Filter from '../Filter'
@@ -61,8 +59,6 @@ const Header = ({value, onTextChange, onChoseFilter, options}) => {
             </View>
         )
     };
-
-    console.log('focus', inFocus);
 
     return (
         <>

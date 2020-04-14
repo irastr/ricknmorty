@@ -8,11 +8,13 @@ import Header from './Header';
 import Character from './Character';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {faChevronUp} from '@fortawesome/free-solid-svg-icons'
-import {ActivityIndicator, FlatList, TouchableOpacity, UIManager, LayoutAnimation} from 'react-native';
+import {ActivityIndicator, FlatList, TouchableOpacity, UIManager, LayoutAnimation, Text} from 'react-native';
 import {useFilter} from '../../res/utils'
 import styles from './styles'
 import colors from '../../res/colors'
 import {Character as CharacterType} from '../../res/models'
+import  {useExpandedWithReducer} from '../../res/hooks/useExpanded'
+import useEffectAfterMount from '../../res/hooks/useEffectAfterMount'
 
 if (Platform.OS === 'android' &&
     UIManager.setLayoutAnimationEnabledExperimental) {
@@ -26,8 +28,10 @@ const CharactersList: () => React$Node = ({navigation}) =>  {
     const isInitialMount = useRef(true);
     const scrollViewRef = useRef<ScrollView>();
     const [characters, loading] = useFilter<CharacterType[]>('character/', options);
-    const [floatingButton, setFloatButton] =  useState(false);
-    // const [isScrolling, setScrolling] = useState(false);
+    const [floatingButton, setFloatButton] = useState(false);
+
+    const hasViewedSecret = useRef(false);
+    const {expanded, toggle, reset, resetDep = 0} = useExpandedWithReducer(false, appReducer);
 
 
     const onSelect = useCallback((id) => {
@@ -42,11 +46,6 @@ const CharactersList: () => React$Node = ({navigation}) =>  {
         }, [options]
     );
 
-    // const onClearAll = useCallback(() => {
-    //     onTextChange('');
-    //     // setOptions({...options, name: ''})
-    // }, [options]);
-
     useEffect(() => {
             if (isInitialMount.current) {
                 isInitialMount.current = false;
@@ -55,12 +54,35 @@ const CharactersList: () => React$Node = ({navigation}) =>  {
             }
         }, [value]);
 
-    // console.log('scrolling', isScrolling);
+
+    function appReducer (currentInternalState, action) {
+        //don't update expanded if user've viewed the secret
+        if(hasViewedSecret.current && action.type === useExpandedWithReducer.types.toggleExpand) {
+            //object returned represents new state proposed by hacker
+            return {
+                ...action.internalChanges,
+                //override internal update
+                expanded: false
+            }
+        }
+        //else, hacker is okay with our internal changes
+        return action.internalChanges
+    }
+
+    useEffectAfterMount(() => {
+        //do after reset
+        console.log('Secret viewed');
+        hasViewedSecret.current = true
+    }, [resetDep]);
+
+
     // return useMemo(() => {
         return (
             <>
                 {loading ? <ActivityIndicator size="large" color={colors.black}/> :
                     <>
+                        <Text onPress={toggle}>Click me</Text>
+                        {expanded && <Text onPress={reset}>View secret</Text>}
                         <FlatList
                             ref={scrollViewRef}
                             onScroll={event => {
@@ -82,9 +104,6 @@ const CharactersList: () => React$Node = ({navigation}) =>  {
                                                          onChoseFilter={onChoseFilter}/>}
                             extraData={value || characters.length}
                             style={styles.container}
-                            // onMomentumScrollBegin={() => setScrolling(true)}
-                            // onMomentumScrollEnd={() => setScrolling(false)}
-                            // onScroll={event => console.log(event.nativeEvent.contentOffset.y, 'event')}
                         />
                         {
                             floatingButton && (
